@@ -1,0 +1,9 @@
+{
+  "extends": "@perdida-peso/config/tsconfig/library.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts", "dist", "node_modules"]
+}

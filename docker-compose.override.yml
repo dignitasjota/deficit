@@ -1,0 +1,36 @@
+# docker-compose.override.yml
+#
+# Se aplica AUTOMÁTICAMENTE encima de `docker-compose.yml` cuando ejecutas
+# `docker compose up` sin flags. Pensado para desarrollo local en tu
+# máquina:
+#   - Expone los puertos de `api` (3001) y `web` (3000) al host para que
+#     accedas desde el navegador.
+#   - Configura `NEXT_PUBLIC_API_URL=http://localhost:3001` para que el
+#     navegador hable con la API local (no con la URL pública de prod).
+#   - Apunta el SMTP al servicio `mailpit` interno.
+#
+# En producción (VPS con Portainer + NPM), Compose IGNORA este archivo si
+# levantas el stack con `docker compose -f docker-compose.yml up` o si
+# Portainer apunta solo al fichero base. Importante: en Portainer, asegúrate
+# de que el stack solo carga `docker-compose.yml`, no este override.
+
+services:
+  api:
+    ports:
+      - "127.0.0.1:3001:3001"
+    environment:
+      NODE_ENV: development
+      SWAGGER_ENABLED: "true"
+      LOG_LEVEL: debug
+      CORS_ORIGINS: http://localhost:3000
+      APP_URL: http://localhost:3000
+
+  web:
+    build:
+      args:
+        # Build-time: el navegador apuntará a la API en localhost.
+        NEXT_PUBLIC_API_URL: http://localhost:3001
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - "127.0.0.1:3000:3000"

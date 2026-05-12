@@ -1,0 +1,303 @@
+@import 'tailwindcss';
+
+/* ════════════════════════════════════════════════════════════════════
+ * Tema cyberpunk · Déficit
+ * ════════════════════════════════════════════════════════════════════
+ * Paleta neón ajustada contra las capturas del sistema original.
+ * Las variables se exponen como utilities Tailwind vía @theme y como
+ * variables CSS para usos puntuales (style attr, gradient, etc.).
+ */
+
+@theme {
+  /* ── Fondos ─────────────────────────────────────────────────── */
+  --color-bg: oklch(13% 0.02 250);
+  --color-bg-elevated: oklch(17% 0.025 250);
+  --color-bg-overlay: oklch(20% 0.03 250 / 0.85);
+
+  /* ── Texto ──────────────────────────────────────────────────── */
+  --color-fg: oklch(93% 0.02 130);
+  --color-fg-muted: oklch(70% 0.02 130);
+  --color-fg-subtle: oklch(50% 0.02 130);
+
+  /* ── Bordes ─────────────────────────────────────────────────── */
+  --color-border: oklch(35% 0.05 145);
+  --color-border-strong: oklch(50% 0.08 145);
+
+  /* ── Paleta neón (afinada contra capturas) ──────────────────── */
+  --color-neon-green: oklch(82% 0.22 145);
+  --color-neon-green-dim: oklch(60% 0.16 145);
+  --color-neon-orange: oklch(78% 0.2 50);
+  --color-neon-orange-dim: oklch(58% 0.15 50);
+  --color-neon-cyan: oklch(85% 0.18 195);
+  --color-neon-cyan-dim: oklch(65% 0.13 195);
+  --color-neon-blue: oklch(70% 0.2 250);
+  --color-neon-purple: oklch(70% 0.22 305);
+  --color-neon-pink: oklch(75% 0.22 350);
+  --color-neon-red: oklch(70% 0.24 25);
+  --color-neon-yellow: oklch(88% 0.18 95);
+  --color-neon-magenta: oklch(72% 0.25 330);
+
+  /* ── Tipografías ────────────────────────────────────────────── */
+  --font-pixel: 'Press Start 2P', 'Courier New', monospace;
+  --font-terminal: 'VT323', 'Courier New', monospace;
+  --font-mono: 'JetBrains Mono', 'Menlo', monospace;
+  --font-sans: 'VT323', 'Courier New', monospace;
+}
+
+/* ════════════════════════════════════════════════════════════════════
+ * 🎨 PLUMBING DE SKINS · Hueco preparado para feature Premium futura
+ * ════════════════════════════════════════════════════════════════════
+ * El bloque `@theme` superior es la skin `cyberpunk` (default).
+ *
+ * Para añadir una skin nueva (ej. `kawaii`):
+ *
+ *   1. Añadir el id al enum BBDD `userThemeEnum` en
+ *      `apps/api/src/db/schema/users.ts`.
+ *   2. Añadir el id al `themePreferenceSchema` Zod en
+ *      `packages/schemas/src/auth.ts`.
+ *   3. Migración Drizzle (`pnpm db:generate`).
+ *   4. Crear bloque CSS aquí debajo:
+ *
+ *        :root[data-theme="kawaii"] {
+ *          --color-bg: oklch(96% 0.03 350);
+ *          --color-neon-green: oklch(75% 0.15 350);
+ *          ...sobreescribir las vars que cambian...
+ *        }
+ *
+ *   5. Selector visible en `/settings` (Premium-only).
+ *   6. (Si la skin es de pago) feature gate en el endpoint
+ *      `PUT /v1/users/me/theme` con `@RequiresPlan('premium')`.
+ *
+ * El componente `ThemeApplier` (`apps/web/src/lib/theme.tsx`) aplica
+ * `<html data-theme="...">` automáticamente al cargar `me`.
+ */
+:root[data-theme='cyberpunk'] {
+  /* No overrides: usa los defaults del @theme. Este bloque existe
+   * como documentación viva — todas las skins siguen este patrón. */
+}
+
+/* ── Layer base ─────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-terminal);
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: none;
+    text-rendering: optimizeSpeed;
+  }
+
+  body {
+    min-height: 100dvh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines globales finas (efecto CRT). */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.18) 0px,
+      rgba(0, 0, 0, 0.18) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: 9998;
+    mix-blend-mode: multiply;
+  }
+
+  /* Vignette suave en bordes para efecto monitor. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 60%,
+      rgba(0, 0, 0, 0.45) 100%
+    );
+    z-index: 9999;
+  }
+
+  /* Selección de texto. */
+  ::selection {
+    background: var(--color-neon-green);
+    color: var(--color-bg);
+  }
+
+  /* Scrollbars cyberpunk. */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg-elevated);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border: 1px solid var(--color-bg);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neon-green-dim);
+  }
+}
+
+/* ── Utilidades reutilizables ─────────────────────────────────── */
+@layer utilities {
+  /* Glow de texto: usa currentColor → siempre coherente con el color de la fuente. */
+  .neon-glow {
+    text-shadow:
+      0 0 4px currentColor,
+      0 0 10px currentColor;
+  }
+
+  .neon-glow-soft {
+    text-shadow: 0 0 6px currentColor;
+  }
+
+  .neon-border-glow {
+    box-shadow:
+      0 0 0 1px currentColor,
+      0 0 12px -2px currentColor;
+  }
+
+  /* Cursor parpadeante para inputs y prompts terminal. */
+  .terminal-cursor::after {
+    content: '▍';
+    display: inline-block;
+    margin-left: 2px;
+    animation: blink 1.05s steps(2) infinite;
+    color: currentColor;
+  }
+
+  /* Píxel art crisp en imágenes. */
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+  }
+
+  /* Dasherized hover para inputs / selects. */
+  .focus-neon {
+    outline: none;
+    box-shadow:
+      0 0 0 1px currentColor,
+      0 0 8px -1px currentColor;
+  }
+
+  /* Shimmer suave para barras de progreso. */
+  .neon-shimmer {
+    background-image: linear-gradient(
+      90deg,
+      currentColor 0%,
+      color-mix(in oklch, currentColor 60%, white) 50%,
+      currentColor 100%
+    );
+    background-size: 200% 100%;
+    animation: neon-shimmer 2.4s linear infinite;
+  }
+}
+
+/* ── Animaciones ──────────────────────────────────────────────── */
+@keyframes blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes neon-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes neon-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@keyframes glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    transform: translate(1px, -1px);
+  }
+  60% {
+    transform: translate(-1px, -1px);
+  }
+  80% {
+    transform: translate(1px, 1px);
+  }
+}
+
+.anim-pulse-neon {
+  animation: neon-pulse 2.4s ease-in-out infinite;
+}
+
+.anim-glitch {
+  animation: glitch 0.4s steps(2) infinite;
+}
+
+/* ── Modo ARCADE (easter egg Konami) ────────────────────────────────
+ * Activado con ↑↑↓↓←→←→BA. Satura paleta, intensifica scanlines y
+ * añade un sutil pulse a títulos. Toggle persistido en localStorage.
+ */
+.arcade-mode {
+  filter: saturate(1.35) contrast(1.08);
+}
+.arcade-mode body::before {
+  opacity: 0.85;
+  animation: scanlines-arcade 1.6s linear infinite;
+}
+.arcade-mode h1,
+.arcade-mode h2 {
+  animation: neon-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes scanlines-arcade {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 8px;
+  }
+}
+
+/* Respetar preferencia de menos animación. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

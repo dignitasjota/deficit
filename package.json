@@ -1,0 +1,31 @@
+{
+  "name": "perdida-peso",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Sistema RPG de pérdida de peso con gamificación profunda",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=22.11.0",
+    "pnpm": ">=9.15.0"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint -- --fix",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "clean": "turbo run clean && rm -rf node_modules .turbo",
+    "db:generate": "pnpm --filter @perdida-peso/api db:generate",
+    "db:migrate": "pnpm --filter @perdida-peso/api db:migrate",
+    "db:studio": "pnpm --filter @perdida-peso/api db:studio"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  }
+}

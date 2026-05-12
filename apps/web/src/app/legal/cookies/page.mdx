@@ -1,0 +1,77 @@
+export const metadata = {
+  title: 'Política de Cookies · Déficit',
+  description: 'Información sobre cookies y almacenamiento local en Déficit.',
+};
+
+# Política de Cookies
+
+> **Última actualización:** [FECHA_PUBLICACION]
+> **Versión:** 1
+
+Esta política explica cómo Déficit usa cookies y mecanismos
+similares (localStorage, sessionStorage) en tu navegador.
+
+## 1. ¿Qué son las cookies?
+
+Una cookie es un pequeño archivo de texto que un sitio web guarda en
+tu dispositivo cuando lo visitas. Permite al sitio recordar
+información sobre tu visita (como preferencias o estado de sesión).
+
+`localStorage` y `sessionStorage` son tecnologías similares: el
+navegador almacena pares clave/valor accesibles únicamente desde el
+sitio que los creó.
+
+## 2. ¿Qué utiliza Déficit?
+
+**Actualmente, Déficit NO utiliza cookies de ningún tipo.**
+
+Para mantener tu sesión iniciada usamos `localStorage`, donde
+almacenamos los tokens JWT de acceso y refresh. Esto es estrictamente
+necesario para que el Servicio funcione (no podrías mantenerte
+logueado sin ello) y por tanto, según la **directriz europea
+ePrivacy** y el criterio del **CEPD**, **no requiere consentimiento
+previo**.
+
+| Identificador | Tipo | Finalidad | Plazo | Propio/Tercero |
+|---------------|------|-----------|-------|----------------|
+| `auth-tokens` | localStorage | Mantener tu sesión iniciada | Hasta logout o expiración del refresh token (30 días por defecto) | Propio |
+| `pp:lastSeenLevel:<userId>` | localStorage | Detectar subidas de nivel para mostrar el overlay correspondiente | Indefinido (hasta logout) | Propio |
+| `pp:arcade` | localStorage | Recordar si has activado el modo arcade (easter egg) | Indefinido | Propio |
+| `pp:cookies-consent` | localStorage | Recordar la versión de esta política que has aceptado | Indefinido | Propio |
+
+Todos los identificadores anteriores son **estrictamente funcionales**
+y no se utilizan con fines de seguimiento, publicidad ni perfilado.
+
+## 3. Cookies de terceros
+
+**No usamos cookies de terceros.** No tenemos integraciones con
+herramientas de analítica (Google Analytics, etc.), publicidad, redes
+sociales ni mapas externos.
+
+## 4. ¿Y si en el futuro añadimos analítica?
+
+Si en algún momento incorporamos cookies o pixels de terceros con
+fines analíticos o de marketing, **te lo solicitaremos previamente**
+mediante un banner de consentimiento granular, conforme al artículo 22
+de la Ley 34/2002 (LSSI) y al RGPD. Hasta entonces, este apartado se
+mantiene vacío conscientemente.
+
+## 5. Cómo borrar el almacenamiento
+
+Puedes borrar el localStorage en cualquier momento desde la
+configuración de tu navegador:
+
+- **Chrome**: Configuración → Privacidad y seguridad → Cookies y otros
+  datos de sitios → Ver todos los datos del sitio → buscar el dominio
+  → Borrar.
+- **Firefox**: Preferencias → Privacidad → Cookies y datos del sitio →
+  Administrar datos → buscar y eliminar.
+- **Safari**: Ajustes → Privacidad → Gestionar datos del sitio web.
+
+Borrar el `auth-tokens` te desconecta de la cuenta. Borrar el resto
+no afecta a tu cuenta, sólo a las preferencias locales del navegador.
+
+## 6. Contacto
+
+Para cualquier duda relacionada con esta política, escríbenos a
+**[TU_EMAIL_DPO]**.

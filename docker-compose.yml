@@ -1,0 +1,161 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: perdida-peso-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-perdida_peso}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # Solo expuesto en dev. En producción comentar el ports.
+    ports:
+      - "127.0.0.1:5432:5432"
+
+  minio:
+    image: minio/minio:latest
+    container_name: perdida-peso-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+    volumes:
+      - miniodata:/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - "127.0.0.1:9000:9000"
+      - "127.0.0.1:9001:9001"
+
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: perdida-peso-mailpit
+    restart: unless-stopped
+    environment:
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+    networks:
+      - internal
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+  # Aplica las migraciones Drizzle pendientes y termina. El servicio `api`
+  # depende de su finalización exitosa para arrancar (idempotente: si todo
+  # está al día, sale en milisegundos).
+  api-migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: perdida-peso-api-migrate
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-perdida_peso}
+    networks:
+      - internal
+    command: ["node", "apps/api/dist/db/migrate.js"]
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: perdida-peso-api
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      api-migrate:
+        condition: service_completed_successfully
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      PORT: 3001
+      DATABASE_URL: postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${POSTGRES_DB:-perdida_peso}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://app.example.com}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      # Auth (Fase 3). Generar con: openssl rand -base64 48
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET es obligatorio (min 32 chars)}
+      ACCESS_TOKEN_TTL_MIN: ${ACCESS_TOKEN_TTL_MIN:-15}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-30}
+      # URLs públicas para emails y Stripe (Fases 14, 17)
+      APP_URL: ${APP_URL:-https://app.example.com}
+      # SMTP (Fase 14). En dev apunta a mailpit; en prod a Resend/SES/postal.
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_FROM: ${SMTP_FROM:-"Déficit <noreply@perdida-peso.local>"}
+      # Soft-delete (Fase 14)
+      PURGE_GRACE_DAYS: ${PURGE_GRACE_DAYS:-30}
+      # Stripe (Fase 17). Vacíos = billing desactivado.
+      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      STRIPE_PRICE_MONTHLY: ${STRIPE_PRICE_MONTHLY:-}
+      STRIPE_PRICE_YEARLY: ${STRIPE_PRICE_YEARLY:-}
+      STRIPE_TRIAL_DAYS: ${STRIPE_TRIAL_DAYS:-14}
+      # Bootstrap del primer admin (Fase 15). Si está definido, el email
+      # indicado se promueve a admin al arrancar la API (idempotente).
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+    networks:
+      - internal
+      - proxy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/health/live').then(r=>process.exit(r.ok?0:1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    expose:
+      - "3001"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.example.com}
+    container_name: perdida-peso-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.example.com}
+    networks:
+      - proxy
+    expose:
+      - "3000"
+
+volumes:
+  pgdata:
+    name: perdida-peso-pgdata
+  miniodata:
+    name: perdida-peso-miniodata
+
+networks:
+  internal:
+    name: perdida-peso-internal
+    driver: bridge
+  proxy:
+    name: perdida-peso-proxy
+    driver: bridge
+    # Si Nginx Proxy Manager está en otra red, marcar external: true
+    # external: true
