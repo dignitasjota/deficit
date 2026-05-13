@@ -7,7 +7,7 @@ import { AvatarFrame } from '@/components/avatar/avatar-frame';
 import { FiveClickEasterEgg } from '@/components/easter-eggs';
 import { AttributesRadar } from '@/components/dashboard/attributes-radar';
 import { BitacoraCard } from '@/components/dashboard/bitacora-card';
-import { DailyInputTabs } from '@/components/dashboard/daily-input-tabs';
+import { DailyInputBar } from '@/components/dashboard/daily-input-bar';
 import { ExperienceCard } from '@/components/dashboard/experience-card';
 import { LevelPathCard } from '@/components/dashboard/level-path-card';
 import { LevelUpOverlay, useLevelUp } from '@/components/dashboard/level-up-overlay';
@@ -195,8 +195,8 @@ export default function HomePage() {
       <VerifyEmailBanner />
       <TrialBanner />
 
-      {/* Registro diario rápido — tabs arriba (lo más usado a diario) */}
-      <DailyInputTabs
+      {/* Registro diario rápido — 3 botones, cada uno abre un modal */}
+      <DailyInputBar
         pesoKg={header.pesoHoy ?? profile.pesoInicialKg}
         attributes={attributes}
         isPremium={isPremium}
