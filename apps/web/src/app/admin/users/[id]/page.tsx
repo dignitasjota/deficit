@@ -50,7 +50,7 @@ export default function AdminUserDetailPage() {
     },
     onSuccess: async () => {
       await refresh();
-      router.push('/');
+      router.push('/app');
     },
     onError: (e) => {
       window.localStorage.removeItem(IMPERSONATE_PREV_KEY);

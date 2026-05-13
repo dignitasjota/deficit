@@ -57,6 +57,7 @@ atributos y bitácora).
 | 18 | Operación a escala (alcance mínimo: health, cache, prometheus) | ✅ Cerrada |
 | 19.0 | PWA básica (instalable iOS+Android+desktop) | ✅ Cerrada |
 | 19.1 | App móvil nativa (React Native + Expo) | 🟦 Condicional (tracción del producto web) |
+| 20 | Landing pública + SEO base (sitemap, robots, OG) | ✅ Cerrada |
 
 Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
 
@@ -201,8 +202,21 @@ Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
   - `AuthProvider` (`src/lib/auth-context.tsx`) con `ApiClient` singleton
     y persistencia de tokens en localStorage.
   - Páginas `/login`, `/register`, `/onboarding` (wizard 2 pasos:
-    avatar + datos), `/` (dashboard con `AppShell`, sidebar de avatar +
-    stats, columna derecha con cards y placeholders por fase).
+    avatar + datos), **`/app`** (dashboard con `AppShell`, sidebar de
+    avatar + stats, columna derecha con cards). El dashboard vive en
+    `/app` desde que existe la landing pública en `/`.
+  - **Landing pública `/`** (Fase 20): página one-page con 10 bloques
+    (Hero + Anti-hero + 3 pilares + How it works + Features bento +
+    Comparativa vs MyFitnessPal/Habitica/Yazio + Pricing teaser + FAQ
+    acordeón + CTA final + Footer). Tagline: "Pierde peso jugando".
+    Mocks visuales SVG inline imitan las cards reales (radar, weight
+    chart, level path, bitácora, level-up) sin necesidad de
+    screenshots. Componente `RedirectIfAuth` redirige a `/app` si el
+    usuario ya tiene sesión. SEO base: `app/sitemap.ts` (indexable:
+    /, /pricing, /register, /legal/*), `app/robots.ts` (disallow
+    /app, /admin, /settings, /onboarding, /verify-email,
+    /forgot-password, /reset-password) y `app/opengraph-image.tsx`
+    con `ImageResponse` (1200x630 con Δ + tagline).
   - **shadcn/ui** inicializado: `Button`, `Input`, `Label`, `Progress`,
     `Badge`, `Separator`, `Dialog`, `Select` (con Radix UI).
   - **TanStack Query** con `QueryProvider` global. Claves centralizadas
@@ -442,15 +456,20 @@ perdida-peso/
 │       ├── src/
 │       │   ├── app/
 │       │   │   ├── admin/            # /admin/{layout,page,users,audit}
+│       │   │   ├── app/              # /app dashboard (auth-gated)
 │       │   │   ├── legal/            # MDX (terminos, privacidad, cookies)
 │       │   │   ├── pricing/          # cards Free vs Premium + Checkout
 │       │   │   ├── settings/         # cuenta + suscripción + RGPD + borrar
 │       │   │   ├── verify-email/, forgot-password/, reset-password/
+│       │   │   ├── icon.tsx, apple-icon.tsx, icon-{192,512}/  # PWA
+│       │   │   ├── manifest.ts, opengraph-image.tsx          # PWA + OG
+│       │   │   ├── sitemap.ts, robots.ts                     # SEO
 │       │   │   ├── layout.tsx        # ImpersonateBanner + CookieBanner global
-│       │   │   ├── page.tsx          # Home con todas las cards + locked
+│       │   │   ├── page.tsx          # Landing pública /
 │       │   │   └── globals.css       # paleta neón + scanlines + reduced-motion
 │       │   ├── components/
 │       │   │   ├── dashboard/        # 14 cards (Weight, Range, XP, Path, ...)
+│       │   │   ├── landing/          # RedirectIfAuth + LandingFAQ
 │       │   │   ├── ui/               # shadcn/ui + NeonCard + NeonStat
 │       │   │   ├── avatar/           # AvatarFrame + AvatarGallery
 │       │   │   ├── layout/           # AppShell con header + footer + sidebar

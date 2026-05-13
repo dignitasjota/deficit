@@ -45,7 +45,7 @@ export default function OnboardingPage() {
 
   useEffect(() => {
     if (!loading && !me) router.push('/login');
-    if (!loading && me?.hasProfile) router.push('/');
+    if (!loading && me?.hasProfile) router.push('/app');
   }, [loading, me, router]);
 
   async function onAvatarNext() {
@@ -74,7 +74,7 @@ export default function OnboardingPage() {
         fechaInicio: new Date().toISOString().slice(0, 10),
       });
       await refresh();
-      router.push('/');
+      router.push('/app');
     } catch (e) {
       setError(e instanceof ApiError ? readError(e) : 'Error inesperado');
     } finally {

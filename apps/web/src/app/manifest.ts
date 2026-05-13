@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
       'Pérdida de peso con gamificación RPG: XP, niveles, atributos y colchón.',
     lang: 'es-ES',
     dir: 'ltr',
-    start_url: '/',
+    start_url: '/app',
     scope: '/',
     display: 'standalone',
     orientation: 'portrait',

@@ -41,12 +41,13 @@ export function AppShell({ sidebar, children }: AppShellProps) {
         }}
       >
         <div className="flex min-w-0 items-baseline gap-2 font-[family-name:var(--font-vt323)] sm:gap-3">
-          <span
+          <Link
+            href="/app"
             className="truncate text-xl neon-glow sm:text-2xl"
             style={{ color: 'var(--color-neon-green)' }}
           >
             ▶ DEFICIT_SYS
-          </span>
+          </Link>
           <span
             className="hidden text-base sm:inline"
             style={{ color: 'var(--color-fg-subtle)' }}

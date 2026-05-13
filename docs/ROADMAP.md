@@ -35,8 +35,9 @@
 | **Suscripción y billing** | 17 | ✅ Cerrada |
 | **Operación a escala (mín.)** | 18 | ✅ Cerrada |
 | **App móvil** | 19 | 🟦 Condicional (tracción del producto web) |
+| **Landing pública + SEO** | 20 | ✅ Cerrada |
 
-Total: **19 de 19 fases cerradas** (Fase 19 móvil queda condicional
+Total: **20 de 20 fases cerradas** (Fase 19 móvil queda condicional
 hasta que haya tracción real del producto web).
 
 ---
@@ -949,6 +950,69 @@ Detonante: > 200 usuarios pidiendo features que la PWA no puede dar
 - [ ] Notificaciones push (Expo Push)
 - [ ] Modo offline con TanStack Query persistido
 - [ ] EAS Build, distribución TestFlight/Play Internal
+
+---
+
+## Fase 20 — Landing pública + SEO base ✅ CERRADA
+
+**Disparador**: necesidad de una página pública que explique el
+producto antes de que el visitante encuentre el login. Sin landing
+no hay SEO ni canal de conversión para tráfico orgánico.
+
+### Decisiones arquitectónicas
+
+- **Misma Next.js**, no codebase separado. Reusa la paleta neón,
+  fuentes y componentes existentes. Tagline elegida:
+  **"Pierde peso jugando"** (amplia, accesible a todo público).
+- **Dashboard movido** de `/` a `/app` para liberar la raíz. La
+  landing en `/` redirige client-side a `/app` si el usuario tiene
+  sesión (`<RedirectIfAuth />`).
+
+### Bloques implementados (10)
+
+- ✅ **Hero**: tagline + sub + 2 CTAs + mockup del dashboard.
+- ✅ **Anti-hero**: nombra MyFitnessPal/Yazio/Lose It/Cronometer
+  como problema ("aburren, las abandonas").
+- ✅ **3 pilares**: XP por déficit · 9 atributos RPG · colchón
+  semanal.
+- ✅ **Cómo funciona en 4 pasos** numerados.
+- ✅ **Features bento** (grid asimétrico) con mocks SVG inline de
+  WeightChart, Radar, Bitácora, Path L0-L80 y LevelUp.
+- ✅ **Comparativa** vs MyFitnessPal/Habitica/Yazio (tabla honesta).
+- ✅ **Pricing teaser**: Free + Premium 4,99 €/mes con CTA al
+  `/pricing` completo.
+- ✅ **FAQ acordeón** con 8 preguntas (báscula, día saltado, RGPD,
+  móvil, cancelación, etc.).
+- ✅ **CTA final**: "L0 te está esperando" + botón "CREAR MI
+  PERSONAJE".
+- ✅ **Footer**: legales + entrar.
+
+### SEO base
+
+- ✅ `app/sitemap.ts` indexa `/`, `/pricing`, `/register`, `/login`,
+  `/legal/*`.
+- ✅ `app/robots.ts` excluye `/app`, `/admin`, `/settings`,
+  `/onboarding`, `/verify-email`, `/forgot-password`,
+  `/reset-password`.
+- ✅ `app/opengraph-image.tsx` genera imagen 1200x630 con Δ + tagline
+  vía `ImageResponse`. Se usa automáticamente en WhatsApp/X/Discord
+  cuando se comparte un link a `/`.
+- ✅ `NEXT_PUBLIC_SITE_URL` para configurar dominio (fallback
+  `https://deficit.app`).
+- ⬜ Google Search Console (manual, pendiente de despliegue real).
+- ⬜ Blog `/blog` con MDX para SEO long-tail: queda pendiente, se
+  activará cuando haya tracción inicial y queramos rankear artículos
+  como "qué es el déficit calórico", "BMR para mujeres", etc.
+
+### Mocks visuales en vez de screenshots
+
+Los mocks de las cards (`MockWeightChart`, `MockRadar`,
+`MockLevelPath`, `MockBitacora`, `MockPath`, `MockLevelUp`,
+`MockExperienceBar`, `MockNextMilestone`) se renderizan con SVG y
+divs estilizados. **Coste**: cero — no requieren levantar la app ni
+generar PNGs. **Compromiso**: menos "auténtico" que screenshots
+reales. Cuando haya 50-100 usuarios y queramos pulir conversión,
+sustituir por capturas reales del dashboard con datos demo.
 
 ---
 

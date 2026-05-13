@@ -53,7 +53,7 @@ export default function SettingsPage() {
           ▶ AJUSTES
         </h1>
         <Link
-          href="/"
+          href="/app"
           className="text-base font-[family-name:var(--font-vt323)] underline"
           style={{ color: 'var(--color-neon-cyan)' }}
         >

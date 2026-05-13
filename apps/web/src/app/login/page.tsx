@@ -28,7 +28,7 @@ export default function LoginPage() {
     try {
       await api.login({ email, password });
       await refresh();
-      router.push('/');
+      router.push('/app');
     } catch (e) {
       const msg = e instanceof ApiError ? readError(e) : 'Error inesperado';
       setError(msg);

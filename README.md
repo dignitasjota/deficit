@@ -37,8 +37,11 @@ radar charts.
 | 18 | Operación a escala (mínimo: health, cache, prometheus) | ✅ Cerrada |
 | 19.0 | PWA básica (instalable iOS+Android+desktop) | ✅ Cerrada |
 | 19.1 | App móvil nativa (React Native + Expo) | 🟦 Condicional |
+| 20 | Landing pública + SEO base (sitemap, robots, OG) | ✅ Cerrada |
 
-**Producto SaaS-ready con observabilidad básica**. **Progreso global**: 19 de 19 fases (100 %, Fase 19 móvil condicional). Tracker detallado en
+**Producto SaaS-ready con observabilidad básica + landing pública**.
+**Progreso global**: 20 de 20 fases cerradas (Fase 19.1 móvil nativa
+condicional). Tracker detallado en
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).
 
 ---

@@ -16,7 +16,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       return;
     }
     if (me.role !== 'admin') {
-      router.replace('/');
+      router.replace('/app');
     }
   }, [loading, me, router]);
 
@@ -73,7 +73,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               Audit log
             </Link>
             <Link
-              href="/"
+              href="/app"
               className="underline"
               style={{ color: 'var(--color-fg-muted)' }}
             >
