@@ -24,6 +24,10 @@ COPY tsconfig.base.json ./tsconfig.base.json
 
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+ARG NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+ENV NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION=$NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
 
 # Compilar packages workspace primero (sus `main` apunta a `dist/`).
 RUN pnpm --filter "@perdida-peso/schemas" --filter "@perdida-peso/domain" --filter "@perdida-peso/api-client" build

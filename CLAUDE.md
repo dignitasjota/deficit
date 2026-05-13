@@ -212,11 +212,22 @@ Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
     Mocks visuales SVG inline imitan las cards reales (radar, weight
     chart, level path, bitácora, level-up) sin necesidad de
     screenshots. Componente `RedirectIfAuth` redirige a `/app` si el
-    usuario ya tiene sesión. SEO base: `app/sitemap.ts` (indexable:
-    /, /pricing, /register, /legal/*), `app/robots.ts` (disallow
-    /app, /admin, /settings, /onboarding, /verify-email,
-    /forgot-password, /reset-password) y `app/opengraph-image.tsx`
-    con `ImageResponse` (1200x630 con Δ + tagline).
+    usuario ya tiene sesión.
+  - **SEO técnico** (Fase 20): `layout.tsx` con `metadataBase`
+    (`NEXT_PUBLIC_SITE_URL`), `alternates.canonical`, `openGraph`
+    locale `es_ES`, Twitter Cards `summary_large_image`, keywords
+    España, `robots.googleBot` (`max-image-preview: large`),
+    `verification.google` (`NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION`).
+    `app/sitemap.ts` indexa `/`, `/pricing`, `/register`, `/legal/*`.
+    `app/robots.ts` excluye rutas privadas. `app/opengraph-image.tsx`
+    genera OG 1200x630 vía `ImageResponse`. `/pricing` y `/register`
+    tienen `layout.tsx` propio con metadata específica. Las páginas
+    `/login`, `/verify-email`, `/forgot-password`, `/reset-password`
+    quedan en robots.disallow. **Structured data JSON-LD**:
+    `components/landing/structured-data.tsx` emite `Organization`,
+    `SoftwareApplication` (con offers Free y Premium) y `FAQPage`
+    (FAQ_ITEMS compartido entre el acordeón visible y el JSON-LD).
+    Estrategia completa en `docs/MARKETING.md`.
   - **shadcn/ui** inicializado: `Button`, `Input`, `Label`, `Progress`,
     `Badge`, `Separator`, `Dialog`, `Select` (con Radix UI).
   - **TanStack Query** con `QueryProvider` global. Claves centralizadas
@@ -743,6 +754,7 @@ curl http://localhost:3001/metrics        # métricas Prometheus
 | [`docs/ROADMAP.md`](./docs/ROADMAP.md) | Tracker de fases con estado actual y próximos pasos. |
 | [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) | Reglas de diseño, dependencias entre packages, patrones multi-tenant. |
 | [`docs/DEPLOY.md`](./docs/DEPLOY.md) | Procedimiento de despliegue self-hosted con Portainer + NPM. |
+| [`docs/MARKETING.md`](./docs/MARKETING.md) | Estrategia SEO (keywords, blog, backlinks) y plan de redes sociales (TikTok, Reddit, X). |
 | [`README.md`](./README.md) | Quickstart para humanos. |
 
 ---

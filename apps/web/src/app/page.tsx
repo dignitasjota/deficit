@@ -2,23 +2,33 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { LandingFAQ } from '@/components/landing/landing-faq';
 import { RedirectIfAuth } from '@/components/landing/redirect-if-auth';
+import { StructuredData } from '@/components/landing/structured-data';
 
 export const metadata: Metadata = {
-  title: 'Déficit · Pierde peso jugando',
+  title: 'Déficit · Pierde peso jugando, no contando calorías',
   description:
-    'Sistema RPG real para perder peso: XP por déficit calórico, 9 atributos, niveles 0-80, colchón semanal y camino visual al objetivo. Trial 14 días sin tarjeta.',
+    'App de pérdida de peso con sistema RPG real: XP por déficit calórico, 9 atributos, niveles 0-80 y colchón semanal. Alternativa española a MyFitnessPal y Habitica. 14 días gratis sin tarjeta.',
+  alternates: { canonical: '/' },
   openGraph: {
     title: 'Déficit · Pierde peso jugando',
     description:
-      'Sistema RPG real para perder peso. XP, niveles 0-80, 9 atributos y colchón semanal.',
+      'Sistema RPG real para perder peso. XP por déficit calórico, 9 atributos, niveles 0-80 y colchón semanal. 14 días gratis sin tarjeta.',
     type: 'website',
     locale: 'es_ES',
+    url: '/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Déficit · Pierde peso jugando',
+    description:
+      'Sistema RPG real para perder peso: XP, 9 atributos, niveles 0-80, colchón semanal.',
   },
 };
 
 export default function LandingPage() {
   return (
     <>
+      <StructuredData />
       <RedirectIfAuth />
       <div
         className="min-h-screen"
