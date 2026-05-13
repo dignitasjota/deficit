@@ -98,6 +98,21 @@
     overflow-x: hidden;
   }
 
+  /* Tailwind v4 deja `cursor: default` en buttons; Chrome no aplica
+   * pointer automáticamente. Forzamos pointer en controles
+   * interactivos para que el usuario perciba el área clickable. */
+  button:not(:disabled),
+  [role='button']:not([aria-disabled='true']),
+  summary,
+  label[for],
+  [tabindex]:not([tabindex='-1']) {
+    cursor: pointer;
+  }
+  button:disabled,
+  [role='button'][aria-disabled='true'] {
+    cursor: not-allowed;
+  }
+
   /* Scanlines globales finas (efecto CRT). */
   body::before {
     content: '';
