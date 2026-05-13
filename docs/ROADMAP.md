@@ -915,15 +915,38 @@ usuarios concurrentes" se cumpla realmente.
 
 ---
 
-## Fase 19 — App móvil nativa 🟦
+## Fase 19 — App móvil 🟦
 
 **Disparador**: tracción del producto web.
 
+### 19.0 PWA básica ✅ (paso 0 cerrado)
+
+Antes de invertir en React Native, la web ya es instalable como app
+desde el navegador del móvil:
+
+- ✅ `app/manifest.ts` con `display: standalone`, theme/background neón.
+- ✅ Iconos generados dinámicamente con `ImageResponse` de `next/og`:
+  favicon (`app/icon.tsx`), apple-touch (`app/apple-icon.tsx`),
+  maskable 192/512 (`app/icon-192/route.tsx`, `app/icon-512/route.tsx`).
+- ✅ SVG master en `/public/icons/icon-master.svg` (Δ neón).
+- ✅ Meta tags iOS via `metadata.appleWebApp` (capable, status-bar
+  black-translucent, title 'Déficit').
+- ✅ Instalable: Android Chrome banner + iOS Safari "Añadir a pantalla
+  de inicio" + desktop install prompt.
+- ⬜ Sin offline (es SaaS conectado por diseño).
+- ⬜ Sin push notifications (requiere iOS 16.4+ y service worker —
+  se añadirá cuando haya demanda real).
+
+### 19.1 React Native + Expo 🟦 (solo si la PWA no basta)
+
+Detonante: > 200 usuarios pidiendo features que la PWA no puede dar
+(HealthKit, Google Fit, widgets, notificaciones push fiables).
+
 - [ ] `apps/mobile` con Expo + React Native
 - [ ] Reutilización de `packages/domain`, `schemas`, `api-client`
-- [ ] BetterAuth con secure storage
+- [ ] Auth JWT con secure storage (Expo SecureStore)
 - [ ] Pantallas: registro de peso, hidratación, pasos, dashboard reducido
-- [ ] Notificaciones push
+- [ ] Notificaciones push (Expo Push)
 - [ ] Modo offline con TanStack Query persistido
 - [ ] EAS Build, distribución TestFlight/Play Internal
 

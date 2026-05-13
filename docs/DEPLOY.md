@@ -637,3 +637,46 @@ Cuando llegues a > 50 usuarios concurrentes, considerar:
 Mientras tanto, los healthchecks granulares (`/health/{live,ready}`)
 y el cache en memoria de `AdminService.getMetrics` cubren el día a
 día con un solo nodo.
+
+---
+
+## Instalación como app móvil (PWA)
+
+Déficit se sirve como **Progressive Web App** instalable. El usuario
+añade un icono a su pantalla de inicio y la app se abre en modo
+standalone (sin barra del navegador), con splash screen y status bar
+coloreados con la paleta neón.
+
+### Verificación post-deploy
+
+Tras desplegar, comprobar que los recursos PWA se sirven con 200:
+
+```bash
+curl -I https://app.tudominio.com/manifest.webmanifest
+curl -I https://app.tudominio.com/icon          # favicon 32x32
+curl -I https://app.tudominio.com/apple-icon    # 180x180
+curl -I https://app.tudominio.com/icon-192      # maskable
+curl -I https://app.tudominio.com/icon-512      # maskable
+```
+
+Lighthouse de Chrome DevTools → pestaña "Application" → "Manifest"
+debe mostrar el manifest parseado sin warnings.
+
+### Instalación desde dispositivos
+
+- **Android (Chrome/Edge)**: el navegador detecta el manifest y
+  ofrece "Instalar app" en el menú o vía banner automático. Se
+  añade al cajón de apps como app nativa.
+- **iOS (Safari)**: menú **Compartir** → **Añadir a pantalla de inicio**.
+  Usa `apple-icon` (180x180) automáticamente.
+- **Desktop (Chrome/Edge)**: icono de instalación en la barra de
+  direcciones cuando se detecta manifest válido.
+
+### Limitaciones conocidas
+
+- **No hay offline**: si no hay red, la app no puede registrar peso ni
+  cargar datos. Es un SaaS conectado por diseño.
+- **Push notifications en iOS**: requieren iOS 16.4+ y que el usuario
+  haya añadido la PWA a la pantalla de inicio. No implementado todavía.
+- **HealthKit / Google Fit**: una PWA no puede leer estos sensores; eso
+  requiere app nativa (Fase 19 condicional).

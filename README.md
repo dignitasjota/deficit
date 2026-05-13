@@ -35,7 +35,8 @@ radar charts.
 | 16 | Legal y cumplimiento (RGPD) | ✅ Cerrada |
 | 17 | Suscripción y billing (Stripe + Premium 4,99 €/mes) | ✅ Cerrada |
 | 18 | Operación a escala (mínimo: health, cache, prometheus) | ✅ Cerrada |
-| 19 | App móvil | 🟦 Condicional |
+| 19.0 | PWA básica (instalable iOS+Android+desktop) | ✅ Cerrada |
+| 19.1 | App móvil nativa (React Native + Expo) | 🟦 Condicional |
 
 **Producto SaaS-ready con observabilidad básica**. **Progreso global**: 19 de 19 fases (100 %, Fase 19 móvil condicional). Tracker detallado en
 [`docs/ROADMAP.md`](./docs/ROADMAP.md).

@@ -55,7 +55,8 @@ atributos y bitácora).
 | 16 | Legal y cumplimiento (RGPD + LOPDGDD) | ✅ Cerrada |
 | 17 | Suscripción y billing (Stripe, Free vs Premium, trial 14d) | ✅ Cerrada |
 | 18 | Operación a escala (alcance mínimo: health, cache, prometheus) | ✅ Cerrada |
-| 19 | App móvil nativa | 🟦 Condicional (tracción del producto web) |
+| 19.0 | PWA básica (instalable iOS+Android+desktop) | ✅ Cerrada |
+| 19.1 | App móvil nativa (React Native + Expo) | 🟦 Condicional (tracción del producto web) |
 
 Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
 
@@ -294,6 +295,20 @@ Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
     compara versión local vs `CURRENT_LEGAL_VERSIONS`. Botón
     "Descargar mis datos" en `/settings`. Footer en `AppShell` y en
     `TerminalShell` con links legales.
+  - **PWA básica**: `app/manifest.ts` genera `/manifest.webmanifest`
+    con `display: standalone`, theme/background neón, categorías
+    health/fitness. Iconos generados dinámicamente con `ImageResponse`
+    de `next/og` (sin necesidad de PNGs estáticos en build):
+    `app/icon.tsx` (32x32 favicon), `app/apple-icon.tsx` (180x180),
+    `app/icon-192/route.tsx` y `app/icon-512/route.tsx` (maskable con
+    safe-zone 60% para que el SO los recorte en círculo/squircle sin
+    perder el glyph Δ). SVG master vectorial en
+    `/public/icons/icon-master.svg`. Meta tags iOS via
+    `metadata.appleWebApp` (capable, status-bar black-translucent,
+    title 'Déficit'). El usuario puede instalar como app desde
+    Safari/Chrome móvil → icono en home screen, modo standalone sin
+    barra del navegador, splash screen automático. Sin offline (es
+    SaaS conectado).
   - **A11y / responsive (Fase 13)**: `prefers-reduced-motion` en
     `globals.css`, skip-link en `AppShell`, `viewport.themeColor`
     + `colorScheme: dark` en metadata, header del shell con email
@@ -346,7 +361,11 @@ Tracker completo y detallado: [`docs/ROADMAP.md`](./docs/ROADMAP.md).
 
 ### Lo que NO existe todavía
 
-- **App móvil nativa** (Fase 19, condicional según tracción del web).
+- **App móvil nativa** (Fase 19.1, condicional según tracción del
+  web). La PWA básica (Fase 19.0) ya cubre el caso "instalar como
+  app en el móvil" desde Safari/Chrome.
+- **Service worker / offline / push notifications**: la PWA actual
+  es sin service worker. Sin offline ni push hasta que haya demanda.
 - **Stack pesado de operación a escala** diferido hasta > 50
   usuarios concurrentes: Redis cache compartido, PgBouncer, réplica
   de lectura Postgres, Grafana + Loki + alertmanager, alertas

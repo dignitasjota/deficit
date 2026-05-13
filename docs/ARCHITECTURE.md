@@ -441,7 +441,8 @@ NestJS o React. Importa siempre desde `@perdida-peso/domain/constants`.
 | CDN | Cloudflare delante del Nginx Proxy Manager | diferido | Cuando lanzamiento público lo justifique |
 | Stack Grafana | Prometheus + Loki + alertmanager | diferido | Cuando > 50 usuarios concurrentes |
 | Skins / themes | `data-theme` attr en `<html>` + CSS vars override | plumbing listo, sin UI | Toda paleta en vars; añadir skin = un bloque `:root[data-theme='x']` |
-| App móvil | Expo + React Native, reusando packages | 19 (condicional) | — |
+| PWA | `app/manifest.ts` + iconos `ImageResponse` (`next/og`) | 19.0 ✅ | Sin offline, sin service worker propio; instalable iOS+Android+desktop |
+| App móvil nativa | Expo + React Native, reusando packages | 19.1 (condicional) | Solo si la PWA no basta (HealthKit, push fiables, widgets) |
 
 ---
 

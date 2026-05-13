@@ -32,6 +32,12 @@ export const metadata: Metadata = {
   title: 'Déficit · Sistema RPG',
   description: 'Sistema de gamificación para pérdida de peso estilo RPG',
   applicationName: 'Déficit',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'Déficit',
+    statusBarStyle: 'black-translucent',
+  },
   formatDetection: { telephone: false, email: false, address: false },
 };
 
